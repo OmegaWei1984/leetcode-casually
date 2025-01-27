@@ -37,17 +37,12 @@ def copy_file_if_not_exists(template_path, target_path, file_name):
     print(f"已创建文件 - {file_name}")
     return True
 
-def main():
+# 新建 Solution
+def new(args):
     # 初始化路径
     home_path = os.path.dirname(__file__)
     template_path = os.path.join(home_path, "tests", "template")
     tests_path = os.path.join(home_path, "tests")
-
-    # 解析命令行参数
-    parser = argparse.ArgumentParser(description="一个简单的工具")
-    parser.add_argument("number", type=int, help="序号")
-    parser.add_argument("title", type=str, help="标题")
-    args = parser.parse_args()
 
     # 验证输入
     validate_input(args.number, template_path)
@@ -61,6 +56,26 @@ def main():
     # 分别复制不存在的文件
     copy_file_if_not_exists(template_path, target_solution, "solution")
     copy_file_if_not_exists(template_path, target_test, "test")
+
+def main():
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description="一个简单的工具")
+    subparsers = parser.add_subparsers(dest="cmd", help="子命令帮助信息")
+
+    # 子命令 new
+    cmd_new_parser = subparsers.add_parser("new", help="新建 Solution")
+    cmd_new_parser.add_argument("number", type=int, help="序号")
+    cmd_new_parser.add_argument("title", type=str, help="标题")
+    cmd_new_parser.set_defaults(func=new)
+
+    # 解析参数
+    args = parser.parse_args()
+
+    # 根据子命令调用对应的函数
+    if hasattr(args, "func"):
+        args.func(args)
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
     main()
