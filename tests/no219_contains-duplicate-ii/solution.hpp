@@ -5,18 +5,12 @@ public:
     bool containsNearbyDuplicate(vector<int>& nums, int k) {
         unordered_map<int, int> map;
         for (int i = 0; i < nums.size(); ++i) {
-            int num = nums[i];
-            unordered_map<int, int>::iterator it = map.find(num);
-            if (it == map.end()) {
-                map[num] = i;
+            auto it = map.find(nums[i]);
+            if (it != map.end() && i - it->second <= k) {
+                return true;
             }
-            else
-            {
-                if (abs(it->second - i) <= k)
-                {
-                    return true;
-                }
-                map[num] = i;
+            else {
+                map[nums[i]] = i;
             }
         }
         return false;
