@@ -37,8 +37,15 @@ def copy_file_if_not_exists(template_path, target_path, file_name):
     print(f"已创建文件 - {file_name}")
     return True
 
+def set_parser_new(subparsers):
+    # 子命令 new
+    cmd_new_parser = subparsers.add_parser("new", help="新建 Solution")
+    cmd_new_parser.add_argument("number", type=int, help="序号")
+    cmd_new_parser.add_argument("title", type=str, help="标题")
+    cmd_new_parser.set_defaults(func=func_new)
+
 # 新建 Solution
-def new(args):
+def func_new(args):
     # 初始化路径
     home_path = os.path.dirname(__file__)
     template_path = os.path.join(home_path, "tests", "template")
@@ -62,11 +69,7 @@ def main():
     parser = argparse.ArgumentParser(description="一个简单的工具")
     subparsers = parser.add_subparsers(dest="cmd", help="子命令帮助信息")
 
-    # 子命令 new
-    cmd_new_parser = subparsers.add_parser("new", help="新建 Solution")
-    cmd_new_parser.add_argument("number", type=int, help="序号")
-    cmd_new_parser.add_argument("title", type=str, help="标题")
-    cmd_new_parser.set_defaults(func=new)
+    set_parser_new(subparsers)
 
     # 解析参数
     args = parser.parse_args()
