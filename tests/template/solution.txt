@@ -2,7 +2,7 @@
 
 class Solution {
 public:
-    int helloWorld(vector<vector<int>>& routes, int source, int target) {
+    int helloWorld() {
         return 0;
     }
 };
