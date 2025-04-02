@@ -54,6 +54,26 @@ def set_parser_test(parsers):
     parser.add_argument("number", type=int, help="序号")
     parser.set_defaults(func=func_test)
 
+def exe_cmake():
+    home_path = os.path.dirname(__file__)
+    build_path = Path(home_path) / "build"
+    subprocess.run(
+        ["cmake", ".."],
+        cwd=str(build_path),
+        check=True
+    )
+
+def exe_make():
+    home_path = os.path.dirname(__file__)
+    build_path = Path(home_path) / "build"
+    result = subprocess.run(
+        ["make"],
+        cwd=str(build_path)
+    )
+    if result.returncode != 0:
+        return False
+    return True
+
 # 新建 Solution
 def func_new(args):
     # 初始化路径
@@ -75,12 +95,16 @@ def func_new(args):
     copy_file_if_not_exists(template_path, target_test, "test")
 
 def func_test(args):
-    print("just a test")
     # 初始化路径
     home_path = os.path.dirname(__file__)
     exe_file = f"no{args.number}"
     test_path = Path(home_path) / "build" / "tests" / exe_file
-    print(test_path)
+    
+    exe_cmake()
+    if not exe_make():
+        print("build 失败")
+        return
+
     if not test_path.is_file():
         print(f"编号为 {args.number} 的测试文件不存在")
         return
